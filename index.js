@@ -13,7 +13,9 @@ class Room {
   static totalOccupancyPercentage(rooms, startDate, endDate) {}
 
   static avalaibleRooms(rooms, startDate, endDate) {}
+
 }
+
 
 class Booking {
   constructor(name, email, checkIn, checkOut, discount, room) {
@@ -27,3 +29,8 @@ class Booking {
 
   getFee() {}
 }
+
+module.exports = {
+  Room,
+  Booking
+};
