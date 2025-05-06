@@ -1,4 +1,5 @@
 const Room = require("./index.js").Room;
+const Booking = require("./index.js").Booking;
 
 test("Return false if the room is not booked", () => {
   const room = new Room("Room 1", [], 100, 0);
@@ -245,4 +246,74 @@ test("Return 0 with empty array", () => {
   const startDate = new Date("2023-10-01");
   const endDate = new Date("2023-10-05");
   expect(Room.avalaibleRooms([], startDate, endDate)).toStrictEqual([]);
+});
+
+// BOOKING TESTS
+
+test("Return the correct fee for a booking with discount", () => {
+  const room = new Room("Room 1", [], 100, 0);
+  const booking = new Booking(
+    "John Doe",
+    "john@example.com",
+    new Date("2023-10-01"),
+    new Date("2023-10-04"),
+    10,
+    room
+  );
+
+  expect(booking.getFee()).toBe(270); // 100 * 3 = 300 - 10% = 270
+});
+
+test("Return error if the booking dates are invalid", () => {
+  const room = new Room("Room 1", [], 100, 0);
+  const booking = new Booking(
+    "John Doe",
+    "john@example.com",
+    123,
+    456,
+    10,
+    room
+  );
+  expect(() => booking.getFee()).toThrow(
+    "checkIn and checkOut must be Date objects"
+  );
+});
+
+test("Return error if checkIn > checkOut", () => {
+  const room = new Room("Room 1", [], 100, 0);
+  const booking = new Booking(
+    "John Doe",
+    "john@example.com",
+    new Date("2023-10-06"),
+    new Date("2023-10-04"),
+    10,
+    room
+  );
+  expect(() => booking.getFee()).toThrow("checkIn must be less than checkOut");
+});
+
+test("Return error if discount < 0", () => {
+  const room = new Room("Room 1", [], 100, 0);
+  const booking = new Booking(
+    "John Doe",
+    "john@example.com",
+    new Date("2023-10-02"),
+    new Date("2023-10-04"),
+    -2,
+    room
+  );
+  expect(() => booking.getFee()).toThrow("discount must be between 0 and 100");
+});
+
+test("Return error if discount > 100", () => {
+  const room = new Room("Room 1", [], 100, 0);
+  const booking = new Booking(
+    "John Doe",
+    "john@example.com",
+    new Date("2023-10-02"),
+    new Date("2023-10-04"),
+    143,
+    room
+  );
+  expect(() => booking.getFee()).toThrow("discount must be between 0 and 100");
 });

@@ -91,7 +91,22 @@ class Booking {
     this.room = room; // Room object
   }
 
-  getFee() {}
+  getFee() {
+    if (!(this.checkIn instanceof Date) || !(this.checkOut instanceof Date)) {
+      throw new Error("checkIn and checkOut must be Date objects");
+    }
+    if (this.checkIn >= this.checkOut) {
+      throw new Error("checkIn must be less than checkOut");
+    }
+    if (this.discount < 0 || this.discount > 100) {
+      throw new Error("discount must be between 0 and 100");
+    }
+
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const days = Math.ceil((this.checkOut - this.checkIn) / millisecondsPerDay);
+    const total = this.room.rate * days;
+    return total - (total * this.discount) / 100;
+  }
 }
 
 module.exports = {
